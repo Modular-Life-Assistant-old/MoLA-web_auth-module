@@ -1,0 +1,25 @@
+{% extends "layout.html" %}
+{% block body %}
+    <h1>{{ user.username.capitalize() if user else 'New user' }}</h1>
+    {% if error %}
+        <div id="ui-body-test" class="ui-body ui-body-a ui-corner-all" style="margin-bottom:1em;">
+            <h3>Error</h3>
+            <p>{{ error }}</p>
+        </div>
+    {% endif %}
+
+    <form method="post" data-ajax="false">
+        {% if not user %}
+            <label for="user">Login</label>
+            <input type="text" name="user" id="user">
+        {% endif %}
+
+        <label for="password">New password</label>
+        <input type="password" name="password" id="password">
+
+        <label for="password_check">New password verif</label>
+        <input type="password" name="password_check" id="password_check">
+
+        <button class="btn btn-primary" type="submit">Save</button>
+    </form>
+{% endblock %}

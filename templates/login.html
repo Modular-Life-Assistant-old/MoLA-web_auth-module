@@ -1,0 +1,27 @@
+{% extends "layout.html" %}
+{% block body %}
+    <div class="ui-body ui-body-a ui-corner-all" style="max-width: 400px; margin: auto">
+        <h1>Login</h1>
+        {% if error %}
+            <div id="ui-body-test" class="ui-body ui-body-a ui-corner-all" style="margin-bottom:1em;">
+                <h3>Error</h3>
+                <p>{{ error }}</p>
+            </div>
+        {% endif %}
+
+        <form method="post" data-ajax="false">
+            <label for="user">Login</label>
+            <input type="text" name="user" id="user">
+
+            <label for="password">Password</label>
+            <input type="password" name="password" id="password">
+
+            <fieldset data-role="controlgroup">
+                <input type="checkbox" name="remember" id="remember" checked="">
+                <label for="remember">Remember me</label>
+            </fieldset>
+
+            <button class="btn btn-primary" type="submit">Login</button>
+        </form>
+    </div>
+{% endblock %}
