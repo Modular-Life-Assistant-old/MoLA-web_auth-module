@@ -1,8 +1,8 @@
 import os
 from flask import flash, Blueprint, redirect, request, render_template, \
     session, url_for
-from flask.ext.login import LoginManager, login_required, login_user,\
-    logout_user
+from flask.ext.login import current_user, LoginManager, login_required, \
+    login_user, logout_user
 
 from core import DataFileManager, ModuleManager
 from helpers.modules.BaseModule import BaseModule
@@ -45,9 +45,16 @@ class Module(BaseModule):
             login_manager.login_view
         ] + DataFileManager.load(self.name, 'exclude_login_required_url', [])
 
+        def filter_app(get_apps_handler):
+            def inner():
+                return [app for app in get_apps_handler() if
+                        current_user.can_access(app['name'])]
+            return inner
+
         for endpoint, view_func in module.flask.view_functions.copy().items():
             if endpoint not in exclude_login_required_url:
                 module.flask.view_functions[endpoint] = login_required(view_func)
+                module.get_apps = filter_app(module.get_apps)
 
     def _index(self):
         """Index page"""
@@ -111,5 +118,6 @@ class Module(BaseModule):
 
 
     def _users(self):
-        users = DataFileManager.load(self.name, 'users', []).sort()
+        users = DataFileManager.load(self.name, 'users', [])
+        users.sort()
         return render_template('users.html', users=users)
